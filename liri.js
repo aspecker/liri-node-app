@@ -8,6 +8,7 @@ var Spotify = require("node-spotify-api");
 var Twitter = require("twitter");
 var request = require("request");
 var fs = require('fs');
+// var inquirer = require('inquirer');
 
 // import keys from .env thru keys.js
 var spotify = new Spotify({id: keys.spotify.id,secret: keys.spotify.secret});
@@ -37,9 +38,8 @@ var getMovie = () => {
     // make the API call with search term
     request("http://www.omdbapi.com/?t="+searchTerm+"&y=&plot=short&apikey=trilogy", function(error, response, body) {
         if (!error && response.statusCode === 200) {
-            console.log("");
             //console log various information about the movie
-            console.log('Title: '+JSON.parse(body).Title);
+            console.log('\nTitle: '+JSON.parse(body).Title);
             console.log('Release Year: '+JSON.parse(body).Year);
             console.log('IMDB Rating: '+JSON.parse(body).Ratings[0].Value);
             console.log('Rotten Tomatoes Rating: '+JSON.parse(body).Ratings[1].Value);
@@ -59,9 +59,9 @@ var getTweet = () =>{
         if (!error) {
             // over the entire tweet array returned, console log the date and text of each tweet
             for (var i=0; i<tweets.length;i++){
-                console.log("Date posted: "+ tweets[i].created_at);
+                console.log("\nDate posted: "+ tweets[i].created_at);
                 console.log("Tweet: "+tweets[i].text);
-                console.log("");
+
             }
         }
     });
@@ -73,7 +73,7 @@ var getSpotify = () =>{
           return console.log('Error occurred: ' + err);
         }
         // console.log(data); 
-        console.log(`Title: ${data.tracks.items[0].name}`);
+        console.log(`\nTitle: ${data.tracks.items[0].name}`);
         console.log(`Artist: ${data.tracks.items[0].artists[0].name}`);
         console.log(`Album: ${data.tracks.items[0].album.name}`);
         console.log(`Preview link: ${data.tracks.items[0].preview_url}`);
@@ -85,6 +85,6 @@ var DWIS = () =>{
 }
 
 // test calls of functions 
-// getMovie();
-// getTweet();
-// getSpotify();
+getMovie();
+getTweet();
+getSpotify();
