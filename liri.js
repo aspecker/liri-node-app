@@ -67,6 +67,10 @@ var getTweet = () =>{
         }
     });
 }
+// get spotify info function
+var getSpotify = () =>{
+    
+}
 
 // test calls of functions 
 // getMovie();
