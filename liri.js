@@ -39,6 +39,7 @@ var getMovie = () => {
     // make the API call with search term
     request("http://www.omdbapi.com/?t="+searchTerm+"&y=&plot=short&apikey=trilogy", function(error, response, body) {
         if (!error && response.statusCode === 200) {
+            console.log("");
             //console log various information about the movie
             console.log('Title: '+JSON.parse(body).Title);
             console.log('Release Year: '+JSON.parse(body).Year);
@@ -69,10 +70,10 @@ var getTweet = () =>{
 }
 // get spotify info function
 var getSpotify = () =>{
-    
+
 }
 
 // test calls of functions 
-// getMovie();
-getTweet();
+getMovie();
+// getTweet();
 
