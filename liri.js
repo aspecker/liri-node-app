@@ -7,6 +7,7 @@ var keys = require("./keys.js");
 var Spotify = require("node-spotify-api");
 var Twitter = require("twitter");
 var request = require("request");
+var fs = require('fs');
 
 // import keys from .env thru keys.js
 var spotify = new Spotify({id: keys.spotify.id,secret: keys.spotify.secret});
@@ -26,12 +27,12 @@ for (var i = 3; i < nodeArgs.length; i++) {
     else {
       searchTerm += nodeArgs[i];
     }
-  }
+}
 
 // get movie function
 var getMovie = () => {
     if (!searchTerm){
-        searchTerm = "Mr Nobody";
+        searchTerm = "Memento";
     };
     // make the API call with search term
     request("http://www.omdbapi.com/?t="+searchTerm+"&y=&plot=short&apikey=trilogy", function(error, response, body) {
@@ -79,7 +80,11 @@ var getSpotify = () =>{
     });
 }
 
+var DWIS = () =>{
+
+}
+
 // test calls of functions 
 // getMovie();
 // getTweet();
-getSpotify();
+// getSpotify();
