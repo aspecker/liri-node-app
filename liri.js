@@ -4,15 +4,12 @@
 // require packages used
 require("dotenv").config();
 var keys = require("./keys.js");
-var SpotifyWebApi = require("spotify-web-api-node");
+var Spotify = require("node-spotify-api");
 var Twitter = require("twitter");
 var request = require("request");
 
 // import keys from .env thru keys.js
-let spotify = new SpotifyWebApi({
-    clientId: keys.spotify.id,
-    clientSecret: keys.spotify.secret
-});
+var spotify = new Spotify({id: keys.spotify.id,secret: keys.spotify.secret});
 var client = new Twitter(keys.twitter);
 
 // declare global variables, such as placeholders and user input
@@ -70,10 +67,19 @@ var getTweet = () =>{
 }
 // get spotify info function
 var getSpotify = () =>{
-
+    spotify.search({ type: 'track', query: searchTerm }, function(err, data) {
+        if (err) {
+          return console.log('Error occurred: ' + err);
+        }
+        // console.log(data); 
+        console.log(`Title: ${data.tracks.items[0].name}`);
+        console.log(`Artist: ${data.tracks.items[0].artists[0].name}`);
+        console.log(`Album: ${data.tracks.items[0].album.name}`);
+        console.log(`Preview link: ${data.tracks.items[0].preview_url}`);
+    });
 }
 
 // test calls of functions 
-getMovie();
+// getMovie();
 // getTweet();
-
+getSpotify();
