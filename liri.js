@@ -8,35 +8,43 @@ var Spotify = require("node-spotify-api");
 var Twitter = require("twitter");
 var request = require("request");
 var fs = require('fs');
-// var inquirer = require('inquirer');
+var inquirer = require('inquirer');
 
 // import keys from .env thru keys.js
 var spotify = new Spotify({id: keys.spotify.id,secret: keys.spotify.secret});
 var client = new Twitter(keys.twitter);
 
-// declare global variables, such as placeholders and user input
-var nodeArgs = process.argv;
-var input = process.argv[2];
-var searchTerm = "";
-
-// loop through anything index 3+, as 2 will be the command
-// then set this to the search term which will be used to query spotify and omdb
-for (var i = 3; i < nodeArgs.length; i++) {
-    if (i > 3 && i < nodeArgs.length) {
-      searchTerm = searchTerm + "+" + nodeArgs[i];
+// inquirer prompts for user input
+inquirer.prompt([
+    {
+     type: "list",
+     name: 'funSel',
+     message: "\nWhat function do you want to perform?",
+     choices: ["Display tweets",'Search spotify','Search OMDB','Do what it says']
+    },
+    {
+     type: 'input',
+     name: 'searchTerm',
+     message: '\nWhat query would you like to search for?'
     }
-    else {
-      searchTerm += nodeArgs[i];
+]).then(function(user){
+    var searchTerm = user.searchTerm;
+    if (user.funSel==='Display tweets'){
+        getTweets(searchTerm);
+    } else if (user.funSel==='Search spotify'){
+        getSpotify(searchTerm);
+    } else if (user.funSel==='Search OMDB'){
+        getMovie(searchTerm);
     }
-}
+});
 
 // get movie function
-var getMovie = () => {
-    if (!searchTerm){
-        searchTerm = "Memento";
+var getMovie = (movie) => {
+    if (!movie){
+        movie = "Memento";
     };
     // make the API call with search term
-    request("http://www.omdbapi.com/?t="+searchTerm+"&y=&plot=short&apikey=trilogy", function(error, response, body) {
+    request("http://www.omdbapi.com/?t="+movie+"&y=&plot=short&apikey=trilogy", function(error, response, body) {
         if (!error && response.statusCode === 200) {
             //console log various information about the movie
             console.log('\nTitle: '+JSON.parse(body).Title);
@@ -51,10 +59,10 @@ var getMovie = () => {
     });
 }
 // get tweet function
-var getTweet = () =>{
+var getTweets = (handle) =>{
     console.log("");
     //make API call to twitter api
-    var params = {screen_name: '25ch11'};
+    var params = {screen_name: handle};
     client.get('statuses/user_timeline', params, function(error, tweets, response) {
         if (!error) {
             // over the entire tweet array returned, console log the date and text of each tweet
@@ -67,12 +75,11 @@ var getTweet = () =>{
     });
 }
 // get spotify info function
-var getSpotify = () =>{
-    spotify.search({ type: 'track', query: searchTerm }, function(err, data) {
+var getSpotify = (songTitle) =>{
+    spotify.search({ type: 'track', query: songTitle}, function(err, data) {
         if (err) {
           return console.log('Error occurred: ' + err);
         }
-        // console.log(data); 
         console.log(`\nTitle: ${data.tracks.items[0].name}`);
         console.log(`Artist: ${data.tracks.items[0].artists[0].name}`);
         console.log(`Album: ${data.tracks.items[0].album.name}`);
@@ -85,6 +92,6 @@ var DWIS = () =>{
 }
 
 // test calls of functions 
-getMovie();
-getTweet();
-getSpotify();
+// getMovie();
+// getTweet();
+// getSpotify();
