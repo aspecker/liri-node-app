@@ -114,7 +114,7 @@ var DWIS = () =>{
         }
         var array = data.split(",");   
         goSearch(array[0],array[1]);
-});
+    });
 };
 //logs a record of the search type and query in log.txt
 var logFile = (choice,search)=>{
