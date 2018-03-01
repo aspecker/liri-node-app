@@ -14,8 +14,8 @@ var inquirer = require('inquirer');
 var spotify = new Spotify({id: keys.spotify.id,secret: keys.spotify.secret});
 var client = new Twitter(keys.twitter);
 
-// inquirer prompts for user input
-inquirer.prompt([
+// inquirer prompts for user input and then runs the cooresponding function using the search term put in
+var question = inquirer.prompt([
     {
      type: "list",
      name: 'funSel',
@@ -25,20 +25,31 @@ inquirer.prompt([
     {
      type: 'input',
      name: 'searchTerm',
-     message: '\nWhat query would you like to search for?'
+     message: '\nWhat are you searching for?'
     }
 ]).then(function(user){
     var searchTerm = user.searchTerm;
-    if (user.funSel==='Display tweets'){
-        getTweets(searchTerm);
-    } else if (user.funSel==='Search spotify'){
-        getSpotify(searchTerm);
-    } else if (user.funSel==='Search OMDB'){
-        getMovie(searchTerm);
+    var userChoice = user.funSel;
+    switch (user.funSel){
+        case 'Display tweets':
+            getTweets(searchTerm);
+            logFile(userChoice,searchTerm);
+            break;
+        case 'Search spotify':
+            getSpotify(searchTerm);
+            logFile(userChoice,searchTerm);
+            break;
+        case 'Search OMDB':
+            getMovie(searchTerm);
+            logFile(userChoice,searchTerm);
+            break;
+        case 'Do what it says':
+            // DWIS function goes here
+            logFile(userChoice,searchTerm);
+            break;
     }
 });
-
-// get movie function
+// get movie function querys OMDB api and outputs information about the movie
 var getMovie = (movie) => {
     if (!movie){
         movie = "Memento";
@@ -57,14 +68,17 @@ var getMovie = (movie) => {
             console.log('Cast: '+JSON.parse(body).Actors);
         }
     });
-}
-// get tweet function
+};
+// get tweet function calls twitter api and displays a list of tweets and their timestamp
 var getTweets = (handle) =>{
-    console.log("");
+    if (!handle){
+        handle = "KenJennings";
+    };
+    console.log(`Tweets by ${handle}`)
     //make API call to twitter api
     var params = {screen_name: handle};
     client.get('statuses/user_timeline', params, function(error, tweets, response) {
-        if (!error) {
+        if (!error && response.statusCode === 200) {
             // over the entire tweet array returned, console log the date and text of each tweet
             for (var i=0; i<tweets.length;i++){
                 console.log("\nDate posted: "+ tweets[i].created_at);
@@ -73,25 +87,37 @@ var getTweets = (handle) =>{
             }
         }
     });
-}
-// get spotify info function
+};
+// get spotify info function queries spotify api and outputs information about a song
 var getSpotify = (songTitle) =>{
-    spotify.search({ type: 'track', query: songTitle}, function(err, data) {
-        if (err) {
-          return console.log('Error occurred: ' + err);
-        }
+    if (!songTitle){
+        songTitle = "Paris in the rain";
+    };
+    spotify.search({ type: 'track', query: songTitle}, function(error, data) {
+        if (!error) {
         console.log(`\nTitle: ${data.tracks.items[0].name}`);
         console.log(`Artist: ${data.tracks.items[0].artists[0].name}`);
         console.log(`Album: ${data.tracks.items[0].album.name}`);
         console.log(`Preview link: ${data.tracks.items[0].preview_url}`);
+        }
     });
-}
-
+};
+// do what it says - pulls information from random.txt and passes it into the program
 var DWIS = () =>{
-
+    fs.readFile("random.txt", "utf8", function(error, data) {
+        if (error) {
+            return console.log(error);
+        }
+        var dataArr = data.split(",");
+        
+});
 }
+//logs a record of the search type and query in log.txt
+var logFile = (choice,search)=>{
+    fs.writeFile("./log.txt",[choice,search],function(error){
+        if (!error) {
+            // console.log("Search logged.");
+        }
+    });
+};
 
-// test calls of functions 
-// getMovie();
-// getTweet();
-// getSpotify();

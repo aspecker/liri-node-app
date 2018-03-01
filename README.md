@@ -2,30 +2,16 @@
 ## Adam Specker
 
 ## Packages Installed
-* spotify, spotify-web-api-node, twitter
-* dotenv, request, require
+* spotify, node-spotify-api, twitter
+* dotenv, request, require, 
+
+## TO-DOs
+* when using the logFile function, it copies over the previous log
+* DWIS function needs to be built
 
 
 
 ## Instructions
-spotify-this-song,"I Want it That Way"
-Make a JavaScript file named liri.js.
-
-At the top of the liri.js file, add code to read and set any environment variables with the dotenv package:
-
-require("dotenv").config();
-Add the code required to import the keys.js file and store it in a variable.
-You should then be able to access your keys information like so
-  var spotify = new Spotify(keys.spotify);
-  var client = new Twitter(keys.twitter);
-Make it so liri.js can take in one of the following commands:
-* `my-tweets`
-
-* `spotify-this-song`
-
-* `movie-this`
-
-* `do-what-it-says`
 What Each Command Should Do
 node liri.js my-tweets
 This will show your last 20 tweets and when they were created at in your terminal/bash window.
