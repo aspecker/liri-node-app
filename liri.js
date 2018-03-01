@@ -30,7 +30,11 @@ var question = inquirer.prompt([
 ]).then(function(user){
     var searchTerm = user.searchTerm;
     var userChoice = user.funSel;
-    switch (user.funSel){
+    goSearch(userChoice,searchTerm);
+});
+// function has a conditional based on the users choice in funSel, and calls the corresponding search function
+var goSearch = (userChoice,searchTerm)=>{
+    switch (userChoice){
         case 'Display tweets':
             getTweets(searchTerm);
             logFile(userChoice,searchTerm);
@@ -44,11 +48,11 @@ var question = inquirer.prompt([
             logFile(userChoice,searchTerm);
             break;
         case 'Do what it says':
-            // DWIS function goes here
+            DWIS ();
             logFile(userChoice,searchTerm);
             break;
     }
-});
+};
 // get movie function querys OMDB api and outputs information about the movie
 var getMovie = (movie) => {
     if (!movie){
@@ -108,10 +112,10 @@ var DWIS = () =>{
         if (error) {
             return console.log(error);
         }
-        var dataArr = data.split(",");
-        
+        var array = data.split(",");   
+        goSearch(array[0],array[1]);
 });
-}
+};
 //logs a record of the search type and query in log.txt
 var logFile = (choice,search)=>{
     fs.writeFile("./log.txt",[choice,search],function(error){
