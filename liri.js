@@ -124,9 +124,15 @@ var DWIS = () =>{
 
 //logs a record of the search type and query in log.txt
 var logFile = (choice,search)=>{
+    fs.readFile('./log.txt', (err,data)=>{
+        console.log(data);
+        var dataArr = data.split(",");
+        console.log(dataArr);
+    });
+    dataArr+
     fs.writeFile("./log.txt",[choice,search],function(error){
         if (!error) {
-            // console.log("Search logged.");
+            console.log("Search logged.");
         }
     });
 };
