@@ -32,6 +32,7 @@ var question = inquirer.prompt([
     var userChoice = user.funSel;
     goSearch(userChoice,searchTerm);
 });
+
 // function has a conditional based on the users choice in funSel, and calls the corresponding search function
 var goSearch = (userChoice,searchTerm)=>{
     switch (userChoice){
@@ -53,6 +54,7 @@ var goSearch = (userChoice,searchTerm)=>{
             break;
     }
 };
+
 // get movie function querys OMDB api and outputs information about the movie
 var getMovie = (movie) => {
     if (!movie){
@@ -73,6 +75,7 @@ var getMovie = (movie) => {
         }
     });
 };
+
 // get tweet function calls twitter api and displays a list of tweets and their timestamp
 var getTweets = (handle) =>{
     if (!handle){
@@ -92,6 +95,7 @@ var getTweets = (handle) =>{
         }
     });
 };
+
 // get spotify info function queries spotify api and outputs information about a song
 var getSpotify = (songTitle) =>{
     if (!songTitle){
@@ -106,6 +110,7 @@ var getSpotify = (songTitle) =>{
         }
     });
 };
+
 // do what it says - pulls information from random.txt and passes it into the program
 var DWIS = () =>{
     fs.readFile("random.txt", "utf8", function(error, data) {
@@ -116,6 +121,7 @@ var DWIS = () =>{
         goSearch(array[0],array[1]);
     });
 };
+
 //logs a record of the search type and query in log.txt
 var logFile = (choice,search)=>{
     fs.writeFile("./log.txt",[choice,search],function(error){
@@ -125,3 +131,21 @@ var logFile = (choice,search)=>{
     });
 };
 
+// asks the user if they want to search again, and if yes delivers initial prompt again
+// var reset = ()=>{
+//     inquirer.prompt([
+//         {
+//          type: 'confirm',
+//          name: 'restart',
+//          message: '\nSearch again?'
+//         }
+//     ]).then(function(user){
+//         var restart = user.restart;
+//         switch (restart){
+//             case false:
+//                 break;
+//             default:
+//                 question();
+//         }
+//     })
+// }
