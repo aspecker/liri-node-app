@@ -14,8 +14,10 @@ var inquirer = require('inquirer');
 var spotify = new Spotify({id: keys.spotify.id,secret: keys.spotify.secret});
 var client = new Twitter(keys.twitter);
 
+question();
 // inquirer prompts for user input and then runs the cooresponding function using the search term put in
-var question = inquirer.prompt([
+function question (){
+inquirer.prompt([
     {
      type: "list",
      name: 'funSel',
@@ -32,6 +34,7 @@ var question = inquirer.prompt([
     var userChoice = user.funSel;
     goSearch(userChoice,searchTerm);
 });
+};
 
 // function has a conditional based on the users choice in funSel, and calls the corresponding search function
 var goSearch = (userChoice,searchTerm)=>{
@@ -73,6 +76,7 @@ var getMovie = (movie) => {
             console.log('Synopsis: '+JSON.parse(body).Plot);
             console.log('Cast: '+JSON.parse(body).Actors);
         }
+        reset();
     });
 };
 
@@ -81,7 +85,7 @@ var getTweets = (handle) =>{
     if (!handle){
         handle = "KenJennings";
     };
-    console.log(`Tweets by ${handle}`)
+    console.log(`\nTweets by ${handle}`)
     //make API call to twitter api
     var params = {screen_name: handle};
     client.get('statuses/user_timeline', params, function(error, tweets, response) {
@@ -93,6 +97,7 @@ var getTweets = (handle) =>{
 
             }
         }
+        reset();
     });
 };
 
@@ -108,6 +113,7 @@ var getSpotify = (songTitle) =>{
         console.log(`Album: ${data.tracks.items[0].album.name}`);
         console.log(`Preview link: ${data.tracks.items[0].preview_url}`);
         }
+    reset();
     });
 };
 
@@ -124,34 +130,28 @@ var DWIS = () =>{
 
 //logs a record of the search type and query in log.txt
 var logFile = (choice,search)=>{
-    fs.readFile('./log.txt', (err,data)=>{
-        console.log(data);
-        var dataArr = data.split(",");
-        console.log(dataArr);
-    });
-    dataArr+
-    fs.writeFile("./log.txt",[choice,search],function(error){
+    fs.appendFile("./log.txt",`${[choice,search]}, `,function(error){
         if (!error) {
-            console.log("Search logged.");
+            // console.log("Search logged.");
         }
     });
 };
 
 // asks the user if they want to search again, and if yes delivers initial prompt again
-// var reset = ()=>{
-//     inquirer.prompt([
-//         {
-//          type: 'confirm',
-//          name: 'restart',
-//          message: '\nSearch again?'
-//         }
-//     ]).then(function(user){
-//         var restart = user.restart;
-//         switch (restart){
-//             case false:
-//                 break;
-//             default:
-//                 question();
-//         }
-//     })
-// }
+var reset = ()=>{
+    inquirer.prompt([
+        {
+         type: 'confirm',
+         name: 'restart',
+         message: '\nSearch again?'
+        }
+    ]).then(function(user){
+        var restart = user.restart;
+        switch (restart){
+            case false:
+                break;
+            default:
+                question();
+        }
+    })
+}
